@@ -1,0 +1,40 @@
+## 创建项目
+    1.创建项目  scrapy startproject (爬虫名称)
+    2.创建爬虫  到项目下 进入cmd scrapy genspider (爬虫名称)(爬虫的域名{url})
+                爬虫名不能和项目名一样
+## 项目结构
+    items.py 用来放爬虫下来的数据
+    middlewares      用来存放中间文件
+    pipelines        用来将items的模型存储到本地中
+    settings            本爬虫的一些配置信息
+    scrapy              项目的配置文件
+    spiders             以后所以爬虫都是存放到里面的
+
+## 笔记
+    1.response是一个 scrapy.http.response.html import HtmlResponse对象 可以执行xpath和css语法来提取数据
+    2.提取出来的数据是一个Selector或者是一个SelectorList对象.需要获取字符串 执行get()或getall()方法
+    3.getall:获取Selector中所有文本.返回一个列表
+    4.get:获取Selector中的第一个文本.返回的是一个str类型
+    5.如果数据解析回来 要传给pipline处理,可以使用yieid来返回
+        如在循环前定义一个列表 最后返回
+            列:items[]
+               for xxx in xxx():
+                   xxxxxxx
+               retrun items
+    6.item:在item.py中定义好类型 就可不必在定义字典类型
+    7.pipeline:专门来保存数据有三种经常使用方法
+            open_spider(self,spider ):当爬虫被打开适合执行
+            process_item(self,item,spider):当爬虫有item数据传过来时候会被调用
+            close_spider(self,spider):当爬虫关闭时候会被调用
+            要激活pipline 在settings.py中 设置 ITENS_PIPELINES.
+### JsonItemExporter,JsonLinesItemExporter
+    保存数据时
+    1.JsonItemExporter
+        数据添加到内存中 最后一次完成后统一加入磁盘
+            优点:储存数据是一个满足json格式的数据
+            坏处:数据量大的时候耗内存
+
+    2.JsonLinesItemExporter
+        每次调用export_item的时候把item存储到硬盘中
+            优点:每次处理数据后直接存入硬盘不会耗内存数据比较安全
+            缺点:每一个字典是一行 文书不是一个满足json的文件
